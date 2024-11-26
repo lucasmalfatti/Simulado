@@ -1,6 +1,7 @@
 package dev.malfatti.API.controllers;
 
 import dev.malfatti.API.entities.Produto;
+import dev.malfatti.API.entities.dtos.AtualizarValorProdutoDTO;
 import dev.malfatti.API.services.ProdutoService;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,12 @@ public class ProdutoController {
     public ResponseEntity<?> buscarProdutoPorId(@PathVariable Long id) {
         try{
             Optional<Produto> produto = produtoService.buscarProdutoPorId(id);
-            return ResponseEntity.ok(produto);
+            if (produtoService.buscarProdutoPorId(id) != null) {
+                return ResponseEntity.ok(produto);
+            }
+            else{
+                return new ResponseEntity("Produto inexistente", HttpStatusCode.valueOf(504));
+            }
         }
         catch (Exception e) {
             return new ResponseEntity("Erro de Consulta", HttpStatusCode.valueOf(504));
@@ -60,6 +66,16 @@ public class ProdutoController {
         }
         catch (Exception e){
             return new ResponseEntity<>("Erro ao remover um produto", HttpStatusCode.valueOf(504));
+        }
+    }
+
+    @PatchMapping("/alterar/valor")
+    public ResponseEntity<?> atualizarValorProduto(@RequestBody AtualizarValorProdutoDTO atualizarValorProdutoDTO) {
+        try{
+            Produto produto = produtoService.atualizarValorProduto(atualizarValorProdutoDTO);
+            return ResponseEntity.ok(produto);
+        }catch (Exception e) {
+            return new ResponseEntity<>("Erro de consulta", HttpStatusCode.valueOf(504));
         }
     }
 

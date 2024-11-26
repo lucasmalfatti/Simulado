@@ -1,6 +1,7 @@
 package dev.malfatti.API.services;
 
 import dev.malfatti.API.entities.Produto;
+import dev.malfatti.API.entities.dtos.AtualizarValorProdutoDTO;
 import dev.malfatti.API.repositories.ProdutoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -35,5 +36,12 @@ public class ProdutoService {
     @Transactional
     public void excluirProduto(Long id) {
         produtoRepository.deleteById(id);
+    }
+
+    public Produto atualizarValorProduto(AtualizarValorProdutoDTO valorProduto) {
+        Optional<Produto> produto = produtoRepository.findById(valorProduto.getId());
+        produto.get().setValor(valorProduto.getValor());
+        produtoRepository.save(produto.get());
+        return produto.get();
     }
 }
